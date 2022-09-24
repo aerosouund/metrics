@@ -15,21 +15,45 @@ spec:
       containers:
       - name: backend
         image: aerosouund/metrics-backend:latest
+        imagePullPolicy: Always
         ports:
-        - containerPort: 8081
+        - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  metadata:
   annotations:
     prometheus.io/port: "9090"
     prometheus.io/scrape: "true"
+  labels:
+    app: backend
 spec:
   selector:
     app: backend
   ports:
-    - port: 8081
+    - name: backend
+      port: 8081
       targetPort: 8080
+      nodePort: 30001
   type: LoadBalancer
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend
+  namespace: monitoring
+  labels:
+    app: backend
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  endpoints:
+  - port: backend
+    path: /metrics
+    interval: 20s
+  namespaceSelector:
+    matchNames:
+    - default
