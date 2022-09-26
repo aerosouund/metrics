@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask ,Response , render_template, request, jsonify
 from prometheus_flask_exporter import PrometheusMetrics
 
 
@@ -19,8 +19,12 @@ app.config[
 mongo = PyMongo(app)
 
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def homepage():
+    if request['error'] == 'client':
+        return Response(status=404)
+    if request['error'] == 'server':
+        return Response(status=504)
     return "Hello World"
 
 
