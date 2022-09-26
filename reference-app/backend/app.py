@@ -19,11 +19,11 @@ app.config[
 mongo = PyMongo(app)
 
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/")
 def homepage():
-    if request['error'] == 'client':
+    if request.headers['error'] == 'client':
         return Response(status=404)
-    if request['error'] == 'server':
+    if request.headers['error'] == 'server':
         return Response(status=504)
     return "Hello World"
 
