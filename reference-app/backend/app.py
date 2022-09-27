@@ -35,7 +35,7 @@ mongo = PyMongo(app)
 
 @app.route("/")
 def homepage():
-    with jaeger_tracer.start_span('home') as span:
+    with jaeger_tracer.start_span('home-span') as span:
         span.set_tag('homepage', 15)
     if request.headers['error'] == 'client':
         return Response(status=404)
@@ -46,12 +46,16 @@ def homepage():
 
 @app.route("/api")
 def my_api():
+    with jaeger_tracer.start_span('api-span') as span:
+        span.set_tag('api', 16)
     answer = "something"
     return jsonify(repsonse=answer)
 
 
 @app.route("/star", methods=["POST"])
 def add_star():
+    with jaeger_tracer.start_span('star-span') as span:
+        span.set_tag('star', 17)
     star = mongo.db.stars
     name = request.json["name"]
     distance = request.json["distance"]
