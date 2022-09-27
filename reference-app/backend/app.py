@@ -12,7 +12,7 @@ metrics = PrometheusMetrics(app)
 
 metrics.info('app_info', 'Application info', version='1.0.3')
 
-def init_tracer(service):
+def init_tracer(service='backend'):
     logging.getLogger('').handlers = []
     logging.basicConfig(format='%(message)s', level=logging.DEBUG)    
     config = Config(
@@ -23,6 +23,7 @@ def init_tracer(service):
     )
     return config.initialize_tracer()
 
+jaeger_tracer = init_tracer()
 
 app.config["MONGO_DBNAME"] = "example-mongodb"
 app.config[
@@ -34,6 +35,8 @@ mongo = PyMongo(app)
 
 @app.route("/")
 def homepage():
+    with jaeger_tracer.start_span('home') as span:
+        span.set_tag('homepage', 15)
     if request.headers['error'] == 'client':
         return Response(status=404)
     if request.headers['error'] == 'server':
