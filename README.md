@@ -16,10 +16,16 @@
 If we want to optimize for a specific SLO such as uptime and latency we will want to track measurable figures that we can
 directly influence and enhance over time related to a particular aspect for the overall SLO that we want to achieve.
 
+An example of SLO is we want our latency to be more than a 100ms for 0.01% of all requests
 ## Creating SLI metrics.
 *TODO:* It is important to know why we want to measure certain metrics for our customer. Describe in detail 5 metrics to measure these SLIs. 
 
-for a case such as latency we will want to measure average response time per service, average response time per 
+for a case such as latency we will want to measure:
+- Average response time per service
+- Network bytes in/out
+- Total requests rate
+- Active database connections
+- Database read rate
 
 ## Create a Dashboard to measure our SLIs
 *TODO:* Create a dashboard to measure the uptime of the frontend and backend services We will also want to measure to measure 40x and 50x errors. Create a dashboard that show these values over a 24 hour period and take a screenshot.
