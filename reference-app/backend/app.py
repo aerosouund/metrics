@@ -1,5 +1,6 @@
 from flask import Flask ,Response , render_template, request, jsonify
 from prometheus_flask_exporter import PrometheusMetrics
+from jaeger_client import Config
 
 
 import pymongo
