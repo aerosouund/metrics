@@ -1,6 +1,7 @@
 from flask import Flask ,Response , render_template, request, jsonify
 from prometheus_flask_exporter import PrometheusMetrics
 from jaeger_client import Config
+import logging
 
 
 import pymongo
@@ -10,6 +11,17 @@ app = Flask(__name__)
 metrics = PrometheusMetrics(app)
 
 metrics.info('app_info', 'Application info', version='1.0.3')
+
+def init_tracer(service):
+    logging.getLogger('').handlers = []
+    logging.basicConfig(format='%(message)s', level=logging.DEBUG)    
+    config = Config(
+        config={
+            'logging': True,
+        },
+        service_name=service,
+    )
+    return config.initialize_tracer()
 
 
 app.config["MONGO_DBNAME"] = "example-mongodb"
