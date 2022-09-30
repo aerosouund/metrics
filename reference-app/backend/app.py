@@ -10,7 +10,7 @@ from flask_pymongo import PyMongo
 
 app = Flask(__name__)
 metrics = PrometheusMetrics(app)
-JAEGER_DOMAIN_NAME = 'traces-collection-agent.observability.svc.cluster.local'
+JAEGER_DOMAIN_NAME = 'localhost'
 
 metrics.info('app_info', 'Application info', version='1.0.3')
 
@@ -25,8 +25,8 @@ def init_tracer(service='backend'):
     )
     return config.initialize_tracer()
 
-jaeger_tracer = init_tracer('backend')
-tracing = FlaskTracing(jaeger_tracer, True, app)
+
+tracing = FlaskTracing(init_tracer, True, app)
 
 app.config["MONGO_DBNAME"] = "example-mongodb"
 app.config[
