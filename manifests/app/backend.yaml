@@ -2,10 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-app
+  labels:
+    name: backend-app
   annotations:
     "sidecar.jaegertracing.io/inject": "true"
 spec:
-  replicas: 
+  replicas: 1
   selector:
     matchLabels:
       app: backend
@@ -15,11 +17,15 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend
+      - env:
+        - name: JAEGER_AGENT_HOST
+          value: my-traces-agent.observability.svc.cluster.local
+        name: backend
         image: aerosouund/metrics-backend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
