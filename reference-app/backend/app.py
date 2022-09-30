@@ -15,7 +15,16 @@ metrics.info('app_info', 'Application info', version='1.0.3')
 
 
 config = Config(
-    config={'logging': True,}, service_name="backend")
+    config={'sampler': {
+                'type': 'const',
+                'param': 1,
+            },
+            'local_agent': {
+                'reporting_host': 'traces-collection.default.svc.cluster.local'
+            },
+            'logging': True,},
+            validate=True,
+            service_name="backend")
 
 jaeger_tracer = config.initialize_tracer()
 tracing = FlaskTracing(jaeger_tracer, True, app)
