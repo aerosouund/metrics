@@ -3,6 +3,7 @@ from prometheus_flask_exporter import PrometheusMetrics
 from jaeger_client import Config
 import logging
 from flask_opentracing import FlaskTracing
+import os
 
 
 import pymongo
@@ -12,8 +13,12 @@ app = Flask(__name__)
 metrics = PrometheusMetrics(app)
 
 metrics.info('app_info', 'Application info', version='1.0.3')
+JAEGER_AGENT_HOST = os.getenv('JAEGER_AGENT_HOST', 'localhost')
+
 
 def init_tracer():
+    logging.getLogger('').handlers = []
+    logging.basicConfig(format='%(message)s', level=logging.DEBUG)
     config = Config(
         config={'sampler': {
                     'type': 'const',
