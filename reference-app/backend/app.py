@@ -13,21 +13,21 @@ metrics = PrometheusMetrics(app)
 
 metrics.info('app_info', 'Application info', version='1.0.3')
 
+def init_tracer():
+    config = Config(
+        config={'sampler': {
+                    'type': 'const',
+                    'param': 1,
+                },
+                'local_agent': {
+                    'reporting_host': 'traces-collection.default.svc.cluster.local'
+                },
+                'logging': True,},
+                validate=True,
+                service_name="backend")
+    return config.initialize_tracer()
 
-config = Config(
-    config={'sampler': {
-                'type': 'const',
-                'param': 1,
-            },
-            'local_agent': {
-                'reporting_host': 'traces-collection.default.svc.cluster.local'
-            },
-            'logging': True,},
-            validate=True,
-            service_name="backend")
-
-jaeger_tracer = config.initialize_tracer()
-tracing = FlaskTracing(jaeger_tracer, True, app)
+tracing = FlaskTracing(lambda: init_tracer(), True, app)
 
 app.config["MONGO_DBNAME"] = "example-mongodb"
 app.config[
@@ -64,4 +64,4 @@ def add_star():
 
 
 if __name__ == "__main__":
-    app.run(threaded=True)
+    app.run()
