@@ -29,7 +29,7 @@ def init_tracer():
                 },
                 'logging': True,},
                 validate=True,
-                service_name="backend")
+                service_name="backend-service")
     return config.initialize_tracer()
 
 tracing = FlaskTracing(lambda: init_tracer(), True, app)
