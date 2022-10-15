@@ -25,7 +25,7 @@ def init_tracer():
                     'param': 1,
                 },
                 'local_agent': {
-                    'reporting_host': 'traces-collection.default.svc.cluster.local'
+                    'reporting_host': 'traces-collection-collector.default.svc.cluster.local'
                 },
                 'logging': True,},
                 validate=True,
